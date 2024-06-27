@@ -1,0 +1,63 @@
+import random
+import time
+
+class Inventory:
+    def __init__(self, initial_stock):
+        self.stock = initial_stock
+
+    def check_stock(self, product_id):
+        return self.stock.get(product_id, 0)
+
+    def process_order(self, product_id, quantity):
+        if product_id in self.stock and self.stock[product_id] >= quantity:
+            self.stock[product_id] -= quantity
+            return True
+        else:
+            return False
+
+def simulate_inventory_management(initial_stock):
+    inventory = Inventory(initial_stock)
+    total_orders = 100
+    orders_fulfilled = 0
+    orders_delayed = 0
+    orders_unfulfilled = 0
+
+    for _ in range(total_orders):
+        # Simulate customer orders
+        product_id = random.randint(1, 5)  # Assuming 5 different products
+        quantity = random.randint(1, 10)   # Random quantity from 1 to 10
+        
+        # Check if order can be fulfilled
+        if inventory.process_order(product_id, quantity):
+            orders_fulfilled += 1
+            print(f"Order processed: Product {product_id}, Quantity {quantity}")
+        else:
+            orders_unfulfilled += 1
+            print(f"Order unfulfilled: Product {product_id}, Quantity {quantity}")
+
+            # Simulate delayed order fulfillment
+            time.sleep(random.uniform(0.5, 2.0))  # Random delay between 0.5 to 2.0 seconds
+            if inventory.check_stock(product_id) > 0:
+                print(f"Order fulfilled after delay: Product {product_id}, Quantity {quantity}")
+                orders_fulfilled += 1
+            else:
+                print(f"Order still unfulfilled after delay: Product {product_id}, Quantity {quantity}")
+                orders_delayed += 1
+
+    # Calculate and print results
+    print("\nSimulation Results:")
+    print(f"Total orders: {total_orders}")
+    print(f"Orders fulfilled: {orders_fulfilled}")
+    print(f"Orders delayed: {orders_delayed}")
+    print(f"Orders unfulfilled: {orders_unfulfilled}")
+
+# Run simulation with initial stock
+initial_stock = {
+    1: 20,  # Initial stock quantity for Product 1
+    2: 15,  # Initial stock quantity for Product 2
+    3: 10,  # Initial stock quantity for Product 3
+    4: 25,  # Initial stock quantity for Product 4
+    5: 30   # Initial stock quantity for Product 5
+}
+
+simulate_inventory_management(initial_stock)
